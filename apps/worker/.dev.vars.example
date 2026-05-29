@@ -1,0 +1,9 @@
+# JWT secret — change in production!
+JWT_SECRET=dev-secret-change-me
+
+# Default admin credentials (used by setup endpoint)
+ADMIN_USERNAME=admin
+ADMIN_PASSWORD=change-me-in-production
+
+# CORS origin for local dev
+CORS_ORIGIN=http://localhost:3000

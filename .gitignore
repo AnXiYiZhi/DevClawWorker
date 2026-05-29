@@ -1,0 +1,44 @@
+# Dependencies
+node_modules/
+vendor/
+venv/
+
+# Environment
+.env
+.env.local
+.env.*.local
+.dev.vars
+
+# Build output
+dist/
+build/
+out/
+.next/
+
+# Cloudflare
+.wrangler/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# Coverage
+coverage/
+*.cover
+htmlcov/
+.coverage
+
+# Turbo
+.turbo/
+
+# TypeScript
+*.tsbuildinfo

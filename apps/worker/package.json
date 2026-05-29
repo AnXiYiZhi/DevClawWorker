@@ -1,0 +1,27 @@
+{
+  "name": "@devclawworker/worker",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "wrangler dev",
+    "build": "tsc --noEmit",
+    "deploy": "wrangler deploy",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate:local": "wrangler d1 migrations apply devclawworker-db --local",
+    "db:migrate:remote": "wrangler d1 migrations apply devclawworker-db --remote",
+    "db:studio": "drizzle-kit studio"
+  },
+  "dependencies": {
+    "@devclawworker/shared": "workspace:*",
+    "@hono/zod-validator": "^0.4.0",
+    "hono": "^4.5.0",
+    "drizzle-orm": "^0.33.0"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20240806.0",
+    "drizzle-kit": "^0.24.0",
+    "typescript": "^5.5.0",
+    "wrangler": "^3.70.0"
+  }
+}

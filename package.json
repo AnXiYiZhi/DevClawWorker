@@ -1,0 +1,23 @@
+{
+  "name": "devclawworker",
+  "private": true,
+  "scripts": {
+    "dev": "pnpm --filter @devclawworker/web dev",
+    "dev:worker": "pnpm --filter @devclawworker/worker dev",
+    "dev:all": "pnpm run --parallel dev dev:worker",
+    "build": "pnpm --filter @devclawworker/web build",
+    "build:worker": "pnpm --filter @devclawworker/worker build",
+    "build:shared": "pnpm --filter @devclawworker/shared build",
+    "lint": "pnpm --filter @devclawworker/web lint",
+    "db:generate": "pnpm --filter @devclawworker/worker db:generate",
+    "db:migrate:local": "pnpm --filter @devclawworker/worker db:migrate:local",
+    "db:migrate:remote": "pnpm --filter @devclawworker/worker db:migrate:remote",
+    "deploy": "pnpm build:shared && pnpm build:worker && pnpm build",
+    "deploy:worker": "pnpm --filter @devclawworker/worker deploy",
+    "deploy:web": "pnpm --filter @devclawworker/web deploy",
+    "clean": "rm -rf node_modules apps/*/node_modules packages/*/node_modules"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

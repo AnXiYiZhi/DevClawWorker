@@ -1,0 +1,37 @@
+name = "devclawworker-api"
+main = "src/index.ts"
+compatibility_date = "2024-08-01"
+compatibility_flags = ["nodejs_compat"]
+routes = [
+  { pattern = "devclaw.ccwu.cc/*", zone_name = "devclaw.ccwu.cc" }
+]
+
+# D1 Database
+[[d1_databases]]
+binding = "DB"
+database_name = "devclawworker-db"
+database_id = "f1e675a9-f6cc-45d4-a626-4c43c9dea358"
+
+# R2 Bucket
+[[r2_buckets]]
+binding = "R2"
+bucket_name = "devclawworker-files"
+
+# Environment variables (use wrangler secret for JWT_SECRET and ADMIN_PASSWORD)
+[vars]
+ADMIN_USERNAME = "admin"
+CORS_ORIGIN = "https://devclaw.cc.cd"
+
+# Production environment
+[env.production]
+name = "devclawworker-api-prod"
+vars = { CORS_ORIGIN = "https://your-domain.com" }
+
+[[env.production.d1_databases]]
+binding = "DB"
+database_name = "devclawworker-db"
+database_id = "f1e675a9-f6cc-45d4-a626-4c43c9dea358"
+
+[[env.production.r2_buckets]]
+binding = "R2"
+bucket_name = "devclawworker-files"
