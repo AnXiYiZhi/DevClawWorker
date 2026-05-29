@@ -8,6 +8,7 @@ export interface Env {
     ADMIN_USERNAME: string;
     ADMIN_PASSWORD: string;
     CORS_ORIGIN: string;
+    CI_UPLOAD_TOKEN: string;
   };
   Variables: {
     jwtPayload: JWTPayload;

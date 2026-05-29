@@ -59,7 +59,7 @@ export default function KeysPage() {
   const [statusFilter, setStatusFilter] = useState("all");
   const [loading, setLoading] = useState(true);
   const [generating, setGenerating] = useState(false);
-  const [generateCount, setGenerateCount] = useState(1);
+  const [generateCount, setGenerateCount] = useState(10);
   const [generateExpiry, setGenerateExpiry] = useState("");
   const [showGenerate, setShowGenerate] = useState(false);
   const [copiedId, setCopiedId] = useState<number | null>(null);
@@ -248,19 +248,24 @@ export default function KeysPage() {
           />
         </div>
         <div className="flex gap-2">
-          {["all", "active", "disabled", "expired"].map((s) => (
-            <Button
-              key={s}
-              variant={statusFilter === s ? "default" : "outline"}
-              size="sm"
-              onClick={() => {
-                setStatusFilter(s);
-                setPage(1);
-              }}
-            >
-              {statusLabels[s]}
-            </Button>
-          ))}
+          <Button
+            variant={statusFilter === "all" ? "default" : "outline"}
+            size="sm"
+            onClick={() => {
+              setStatusFilter("all");
+              setPage(1);
+            }}
+          >
+            全部
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={fetchKeys}
+          >
+            <RotateCcw className="mr-2 h-4 w-4" />
+            刷新
+          </Button>
         </div>
       </div>
 

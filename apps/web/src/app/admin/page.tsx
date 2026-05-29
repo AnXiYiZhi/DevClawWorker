@@ -10,6 +10,7 @@ import {
   TrendingUp,
   Clock,
   Monitor,
+  RefreshCw,
 } from "lucide-react";
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8787";
@@ -41,18 +42,26 @@ export default function AdminDashboard() {
   const [stats, setStats] = useState<Stats | null>(null);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
+  const fetchStats = async () => {
     const token = localStorage.getItem("token");
-    fetch(`${API_BASE}/api/dashboard/stats`, {
-      credentials: "include",
-      headers: token ? { Authorization: `Bearer ${token}` } : {},
-    })
-      .then((r) => r.json())
-      .then((data) => {
-        if (data.success) setStats(data.data);
-      })
-      .catch(console.error)
-      .finally(() => setLoading(false));
+    try {
+      const res = await fetch(`${API_BASE}/api/dashboard/stats`, {
+        credentials: "include",
+        headers: token ? { Authorization: `Bearer ${token}` } : {},
+      });
+      const data = await res.json();
+      if (data.success) setStats(data.data);
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchStats();
+    const interval = setInterval(fetchStats, 30000);
+    return () => clearInterval(interval);
   }, []);
 
   if (loading) {
@@ -73,14 +82,14 @@ export default function AdminDashboard() {
 
   const statCards = [
     {
-      label: "总授权数",
+      label: "总密钥数量",
       value: stats.totalKeys,
       icon: Key,
       color: "text-brand-400",
       bg: "bg-brand-400/10",
     },
     {
-      label: "已激活",
+      label: "已绑定设备",
       value: stats.activeKeys,
       icon: TrendingUp,
       color: "text-emerald-400",
@@ -104,6 +113,16 @@ export default function AdminDashboard() {
 
   return (
     <div className="space-y-8">
+      <div className="flex items-center justify-between">
+        <h1 className="text-2xl font-bold">仪表盘</h1>
+        <button
+          onClick={() => { setLoading(true); fetchStats(); }}
+          className="flex items-center gap-2 rounded-lg border border-zinc-700 px-3 py-2 text-sm text-zinc-400 hover:text-white transition-colors"
+        >
+          <RefreshCw className={`h-4 w-4 ${loading ? "animate-spin" : ""}`} />
+          刷新
+        </button>
+      </div>
       {/* Stats grid */}
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {statCards.map((stat) => (

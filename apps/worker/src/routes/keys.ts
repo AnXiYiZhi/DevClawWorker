@@ -8,7 +8,7 @@ import {
 } from "@devclawworker/shared";
 import { createDb } from "../db";
 import { licenseKeys, activationLogs } from "../db/schema";
-import { eq, like, sql, desc, and, count } from "drizzle-orm";
+import { eq, like, sql, desc, and, count, asc } from "drizzle-orm";
 import { generateLicenseKey } from "../lib/key";
 import { AppError } from "../middleware/error";
 import type { Env } from "../types";
@@ -40,7 +40,10 @@ keys.get("/", zValidator("query", paginationSchema, (result, c) => {
     .select()
     .from(licenseKeys)
     .where(where)
-    .orderBy(desc(licenseKeys.createdAt))
+    .orderBy(
+      sql`CASE WHEN ${licenseKeys.deviceId} IS NULL THEN 0 ELSE 1 END`,
+      desc(licenseKeys.createdAt)
+    )
     .limit(limit)
     .offset(offset);
 

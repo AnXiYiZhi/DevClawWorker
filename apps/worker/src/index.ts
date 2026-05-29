@@ -1,7 +1,7 @@
 import { Hono } from "hono";
 import { createCors } from "./middleware/cors";
 import { errorMiddleware } from "./middleware/error";
-import { authMiddleware, adminMiddleware } from "./middleware/auth";
+import { authMiddleware } from "./middleware/auth";
 import type { Env } from "./types";
 import { auth } from "./routes/auth";
 import { verify } from "./routes/verify";
@@ -37,10 +37,7 @@ protectedDashboard.use("*", authMiddleware);
 protectedDashboard.route("/", dashboard);
 app.route("/api/dashboard", protectedDashboard);
 
-const protectedUpload = new Hono<Env>();
-protectedUpload.use("*", authMiddleware, adminMiddleware);
-protectedUpload.route("/", upload);
-app.route("/api/upload", protectedUpload);
+app.route("/api/upload", upload);
 
 // 404
 app.notFound((c) =>
