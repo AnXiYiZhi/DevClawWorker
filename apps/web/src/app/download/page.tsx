@@ -1,13 +1,16 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { Nav } from "@/components/nav";
 import { Footer } from "@/components/footer";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Download, Monitor, Apple, ArrowLeft, CheckCircle } from "lucide-react";
+import { Download, Monitor, Apple, ArrowLeft, CheckCircle, Loader2 } from "lucide-react";
 import Link from "next/link";
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8787";
+const GITEE_REPO = "anxi-yizhi/dev-claw";
+const GITHUB_REPO = "AnXiYiZhi/DevCLaw";
 
 const highlights = [
   "支持 7 款 AI 编程工具",
@@ -18,7 +21,28 @@ const highlights = [
 ];
 
 export default function DownloadPage() {
-  const handleDownload = (platform: string) => {
+  const [version, setVersion] = useState<string | null>(null);
+
+  useEffect(() => {
+    fetch(`${API_BASE}/api/downloads/info`)
+      .then((r) => r.json())
+      .then((d) => {
+        if (d.success) setVersion(d.data.version);
+      })
+      .catch(() => {});
+  }, []);
+
+  const ghDownload = (file: string) => {
+    if (!version) return;
+    window.location.href = `https://github.com/${GITHUB_REPO}/releases/download/v${version}/${file}`;
+  };
+
+  const giteeDownload = (file: string) => {
+    if (!version) return;
+    window.location.href = `https://gitee.com/${GITEE_REPO}/releases/download/v${version}/${file}`;
+  };
+
+  const r2Download = (platform: string) => {
     window.open(`${API_BASE}/api/downloads/${platform}`, "_blank");
   };
 
@@ -41,6 +65,9 @@ export default function DownloadPage() {
             <p className="mt-4 text-zinc-400">
               Tauri 2 (Rust) 构建，轻量极速，数据全部本地存储
             </p>
+            {version && (
+              <p className="mt-2 text-sm text-zinc-600">当前版本：v{version}</p>
+            )}
           </div>
 
           {/* Highlights */}
@@ -66,21 +93,37 @@ export default function DownloadPage() {
                   </div>
                   <div>
                     <CardTitle>Windows</CardTitle>
-                    <p className="text-sm text-zinc-500">x64 安装包 (.exe)</p>
+                    <p className="text-sm text-zinc-500">x64 安装包 (.zip)</p>
                   </div>
                 </div>
               </CardHeader>
               <CardContent>
                 <p className="mb-4 text-sm text-zinc-400">
-                  兼容 Windows 10/11，支持自动更新。
+                  兼容 Windows 10/11，解压即用。
                 </p>
                 <Button
                   className="w-full"
-                  onClick={() => handleDownload("windows")}
+                  disabled={!version}
+                  onClick={() => giteeDownload(`DevClaw-v${version}-Windows-Portable.zip`)}
                 >
-                  <Download className="mr-2 h-4 w-4" />
-                  下载 Windows 版
+                  {version ? (
+                    <>
+                      <Download className="mr-2 h-4 w-4" />
+                      下载 Windows 版
+                    </>
+                  ) : (
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                  )}
                 </Button>
+                <div className="mt-2 flex justify-center gap-3 text-xs text-zinc-500">
+                  <button onClick={() => ghDownload(`DevClaw-v${version}-Windows-Portable.zip`)} className="hover:text-zinc-300 transition-colors">
+                    GitHub
+                  </button>
+                  <span className="text-zinc-700">|</span>
+                  <button onClick={() => r2Download("windows")} className="hover:text-zinc-300 transition-colors">
+                    R2
+                  </button>
+                </div>
               </CardContent>
             </Card>
 
@@ -105,11 +148,27 @@ export default function DownloadPage() {
                 </p>
                 <Button
                   className="w-full"
-                  onClick={() => handleDownload("macos")}
+                  disabled={!version}
+                  onClick={() => giteeDownload(`DevClaw-v${version}-macOS.dmg`)}
                 >
-                  <Download className="mr-2 h-4 w-4" />
-                  下载 macOS 版
+                  {version ? (
+                    <>
+                      <Download className="mr-2 h-4 w-4" />
+                      下载 macOS 版
+                    </>
+                  ) : (
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                  )}
                 </Button>
+                <div className="mt-2 flex justify-center gap-3 text-xs text-zinc-500">
+                  <button onClick={() => ghDownload(`DevClaw-v${version}-macOS.dmg`)} className="hover:text-zinc-300 transition-colors">
+                    GitHub
+                  </button>
+                  <span className="text-zinc-700">|</span>
+                  <button onClick={() => r2Download("macos")} className="hover:text-zinc-300 transition-colors">
+                    R2
+                  </button>
+                </div>
               </CardContent>
             </Card>
           </div>
@@ -124,9 +183,8 @@ export default function DownloadPage() {
                 <div>
                   <h4 className="mb-2 font-medium">Windows</h4>
                   <ol className="list-inside list-decimal space-y-1 text-sm text-zinc-400">
-                    <li>下载安装包（.exe）</li>
-                    <li>运行安装程序，按提示完成安装</li>
-                    <li>从开始菜单或桌面快捷方式启动 DevClaw</li>
+                    <li>下载安装包（.zip）</li>
+                    <li>解压后运行 devclaw.exe</li>
                     <li>首次启动会自动配置 AI 工具环境</li>
                   </ol>
                 </div>
