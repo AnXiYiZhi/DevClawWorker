@@ -117,11 +117,11 @@ export default function DownloadPage() {
                 </Button>
                 <div className="mt-2 flex justify-center gap-3 text-xs text-zinc-500">
                   <button onClick={() => ghDownload(`DevClaw-v${version}-Windows-Portable.zip`)} className="hover:text-zinc-300 transition-colors">
-                    GitHub
+                    备用下载1 GitHub
                   </button>
                   <span className="text-zinc-700">|</span>
                   <button onClick={() => r2Download("windows")} className="hover:text-zinc-300 transition-colors">
-                    R2
+                    备用下载2 R2
                   </button>
                 </div>
               </CardContent>
@@ -137,14 +137,14 @@ export default function DownloadPage() {
                   <div>
                     <CardTitle>macOS</CardTitle>
                     <p className="text-sm text-zinc-500">
-                      Apple Silicon (.dmg)
+                      Apple Silicon & Intel (.dmg)
                     </p>
                   </div>
                 </div>
               </CardHeader>
               <CardContent>
                 <p className="mb-4 text-sm text-zinc-400">
-                  原生 ARM64 构建，适配 M1/M2/M3/M4 芯片。
+                  原生 ARM64/x64 构建，适配 M/Intel 系列芯片。
                 </p>
                 <Button
                   className="w-full"
@@ -162,11 +162,11 @@ export default function DownloadPage() {
                 </Button>
                 <div className="mt-2 flex justify-center gap-3 text-xs text-zinc-500">
                   <button onClick={() => ghDownload(`DevClaw-v${version}-macOS.dmg`)} className="hover:text-zinc-300 transition-colors">
-                    GitHub
+                    备用下载1 GitHub
                   </button>
                   <span className="text-zinc-700">|</span>
                   <button onClick={() => r2Download("macos")} className="hover:text-zinc-300 transition-colors">
-                    R2
+                    备用下载2 R2
                   </button>
                 </div>
               </CardContent>
