@@ -1,5 +1,7 @@
 # DevClawWorker
 
+[中文](./README.zh-CN.md)
+
 Software license management and distribution platform built on Cloudflare.
 
 ## Tech Stack
