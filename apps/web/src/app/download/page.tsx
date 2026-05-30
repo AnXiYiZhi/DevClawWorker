@@ -37,9 +37,28 @@ export default function DownloadPage() {
     window.location.href = `https://github.com/${GITHUB_REPO}/releases/download/v${version}/${file}`;
   };
 
-  const giteeDownload = (file: string) => {
+  const giteeDownload = async (file: string) => {
     if (!version) return;
-    window.location.href = `https://gitee.com/${GITEE_REPO}/releases/download/v${version}/${file}`;
+    try {
+      const res = await fetch(
+        `https://gitee.com/api/v5/repos/${GITEE_REPO}/releases?page=1&per_page=5`
+      );
+      const releases = await res.json();
+      for (const rel of releases) {
+        if (rel.prerelease || rel.draft) continue;
+        const asset = rel.assets?.find(
+          (a: { name: string }) => a.name === file
+        );
+        if (asset?.browser_download_url) {
+          window.location.href = asset.browser_download_url;
+          return;
+        }
+      }
+      // fallback: try tag-based URL
+      window.location.href = `https://gitee.com/${GITEE_REPO}/releases/download/v${version}/${file}`;
+    } catch {
+      window.location.href = `https://gitee.com/${GITEE_REPO}/releases/download/v${version}/${file}`;
+    }
   };
 
   const r2Download = (platform: string) => {
