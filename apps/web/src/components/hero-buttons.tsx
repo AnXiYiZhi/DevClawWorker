@@ -70,7 +70,7 @@ export function HeroButtons() {
             alt="作者联系方式"
             className="max-w-full rounded-lg"
           />
-          <p className="text-sm text-zinc-400">扫码添加作者微信进行咨询</p>
+          <p className="text-sm text-zinc-400">扫码关注作者小红书进行咨询</p>
         </div>
       </Dialog>
     </>
