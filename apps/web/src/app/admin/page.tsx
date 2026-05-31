@@ -40,10 +40,12 @@ interface Stats {
 
 export default function AdminDashboard() {
   const [stats, setStats] = useState<Stats | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [initialLoading, setInitialLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
 
-  const fetchStats = async () => {
+  const fetchStats = async (isRefresh = false) => {
     const token = localStorage.getItem("token");
+    if (isRefresh) setRefreshing(true);
     try {
       const res = await fetch(`${API_BASE}/api/dashboard/stats`, {
         credentials: "include",
@@ -54,17 +56,18 @@ export default function AdminDashboard() {
     } catch (e) {
       console.error(e);
     } finally {
-      setLoading(false);
+      setInitialLoading(false);
+      setRefreshing(false);
     }
   };
 
   useEffect(() => {
     fetchStats();
-    const interval = setInterval(fetchStats, 30000);
+    const interval = setInterval(() => fetchStats(true), 30000);
     return () => clearInterval(interval);
   }, []);
 
-  if (loading) {
+  if (initialLoading) {
     return (
       <div className="flex items-center justify-center py-20">
         <div className="h-8 w-8 animate-spin rounded-full border-2 border-brand-600 border-t-transparent" />
@@ -113,13 +116,19 @@ export default function AdminDashboard() {
 
   return (
     <div className="space-y-8">
+      {refreshing && (
+        <div className="fixed top-16 left-0 right-0 z-50 h-0.5 bg-zinc-800">
+          <div className="h-full w-1/3 animate-[slide_1s_ease-in-out_infinite] bg-brand-500" />
+        </div>
+      )}
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold">仪表盘</h1>
         <button
-          onClick={() => { setLoading(true); fetchStats(); }}
-          className="flex items-center gap-2 rounded-lg border border-zinc-700 px-3 py-2 text-sm text-zinc-400 hover:text-white transition-colors"
+          onClick={() => fetchStats(true)}
+          disabled={refreshing}
+          className="flex items-center gap-2 rounded-lg border border-zinc-700 px-3 py-2 text-sm text-zinc-400 hover:text-white transition-colors disabled:opacity-50"
         >
-          <RefreshCw className={`h-4 w-4 ${loading ? "animate-spin" : ""}`} />
+          <RefreshCw className={`h-4 w-4 ${refreshing ? "animate-spin" : ""}`} />
           刷新
         </button>
       </div>

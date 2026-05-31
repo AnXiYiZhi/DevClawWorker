@@ -57,15 +57,18 @@ export default function KeysPage() {
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
-  const [loading, setLoading] = useState(true);
+  const [initialLoading, setInitialLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
   const [generating, setGenerating] = useState(false);
   const [generateCount, setGenerateCount] = useState(10);
   const [generateExpiry, setGenerateExpiry] = useState("");
   const [showGenerate, setShowGenerate] = useState(false);
   const [copiedId, setCopiedId] = useState<number | null>(null);
 
-  const fetchKeys = useCallback(async () => {
-    setLoading(true);
+  const fetchKeys = useCallback(async (isRefresh = false) => {
+    if (isRefresh) setRefreshing(true);
+    else if (initialLoading) setInitialLoading(true);
+
     const params = new URLSearchParams({
       page: page.toString(),
       limit: "20",
@@ -86,9 +89,10 @@ export default function KeysPage() {
     } catch (err) {
       console.error(err);
     } finally {
-      setLoading(false);
+      setInitialLoading(false);
+      setRefreshing(false);
     }
-  }, [page, search, statusFilter]);
+  }, [page, search, statusFilter, initialLoading]);
 
   useEffect(() => {
     fetchKeys();
@@ -120,32 +124,32 @@ export default function KeysPage() {
 
   const handleToggleStatus = async (id: number, currentStatus: string) => {
     const newStatus = currentStatus === "active" ? "disabled" : "active";
+    setKeys(prev => prev.map(k => k.id === id ? { ...k, status: newStatus } : k));
     await fetch(`${API_BASE}/api/keys/${id}`, {
       method: "PATCH",
       credentials: "include",
       headers: { "Content-Type": "application/json", ...authHeaders() },
       body: JSON.stringify({ status: newStatus }),
     });
-    fetchKeys();
   };
 
   const handleDelete = async (id: number) => {
     if (!confirm("确定要永久删除此授权码吗？")) return;
+    setKeys(prev => prev.filter(k => k.id !== id));
     await fetch(`${API_BASE}/api/keys/${id}`, {
       method: "DELETE",
       credentials: "include",
       headers: authHeaders(),
     });
-    fetchKeys();
   };
 
   const handleResetDevice = async (id: number) => {
+    setKeys(prev => prev.map(k => k.id === id ? { ...k, deviceId: null } : k));
     await fetch(`${API_BASE}/api/keys/${id}/reset-device`, {
       method: "POST",
       credentials: "include",
       headers: authHeaders(),
     });
-    fetchKeys();
   };
 
   const copyKey = (id: number, key: string) => {
@@ -169,6 +173,11 @@ export default function KeysPage() {
 
   return (
     <div className="space-y-6">
+      {refreshing && (
+        <div className="fixed top-16 left-0 right-0 z-50 h-0.5 bg-zinc-800">
+          <div className="h-full w-1/3 animate-[slide_1s_ease-in-out_infinite] bg-brand-500" />
+        </div>
+      )}
       {/* Header */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
@@ -261,9 +270,10 @@ export default function KeysPage() {
           <Button
             variant="outline"
             size="sm"
-            onClick={fetchKeys}
+            onClick={() => fetchKeys(true)}
+            disabled={refreshing}
           >
-            <RotateCcw className="mr-2 h-4 w-4" />
+            <RotateCcw className={`mr-2 h-4 w-4 ${refreshing ? "animate-spin" : ""}`} />
             刷新
           </Button>
         </div>
@@ -272,7 +282,7 @@ export default function KeysPage() {
       {/* Keys table */}
       <Card>
         <CardContent className="p-0">
-          {loading ? (
+          {initialLoading ? (
             <div className="flex items-center justify-center py-20">
               <Loader2 className="h-8 w-8 animate-spin text-zinc-500" />
             </div>
