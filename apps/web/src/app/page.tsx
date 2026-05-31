@@ -1,11 +1,10 @@
 import { Nav } from "@/components/nav";
 import { Footer } from "@/components/footer";
+import { HeroButtons } from "@/components/hero-buttons";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import {
   Download,
-  Github,
-  ArrowRight,
   Settings,
   RefreshCw,
   Server,
@@ -123,25 +122,7 @@ export default function HomePage() {
               OpenCode、OpenClaw、Hermes Agent 共 7 款 AI 编程工具。
             </p>
 
-            <div className="mt-10 flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
-              <Link href="/download">
-                <Button size="lg" className="group">
-                  <Download className="mr-2 h-5 w-5" />
-                  免费下载
-                  <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-0.5" />
-                </Button>
-              </Link>
-              <a
-                href="https://github.com"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <Button variant="outline" size="lg">
-                  <Github className="mr-2 h-5 w-5" />
-                  查看源码
-                </Button>
-              </a>
-            </div>
+            <HeroButtons />
 
             {/* Tool logos */}
             <div className="mx-auto mt-16 max-w-2xl">

@@ -31,7 +31,7 @@ export function Nav() {
             下载
           </Link>
           <a
-            href="https://github.com"
+            href="https://github.com/AnXiYiZhi/DevCLaw"
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center gap-1.5 text-sm text-zinc-400 transition-colors hover:text-white"
@@ -75,7 +75,7 @@ export function Nav() {
               下载
             </Link>
             <a
-              href="https://github.com"
+              href="https://github.com/AnXiYiZhi/DevCLaw"
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center gap-1.5 text-sm text-zinc-400 hover:text-white"
