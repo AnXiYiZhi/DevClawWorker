@@ -25,14 +25,10 @@ export function HeroButtons() {
             <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-0.5" />
           </Button>
         </Link>
-        <Button
-          variant="ghost"
-          size="lg"
-          className="text-zinc-400 hover:text-emerald-400"
-          onClick={() => setShowQR(true)}
-        >
+        <Button size="lg" className="group" onClick={() => setShowQR(true)}>
           <MessageCircle className="mr-2 h-5 w-5" />
           添加作者咨询
+          <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-0.5" />
         </Button>
       </div>
 
@@ -52,11 +48,7 @@ export function HeroButtons() {
           target="_blank"
           rel="noopener noreferrer"
         >
-          <Button
-            variant="ghost"
-            size="lg"
-            className="text-zinc-400 hover:text-blue-400"
-          >
+          <Button variant="outline" size="lg">
             <BookOpen className="mr-2 h-5 w-5" />
             教程文档
           </Button>
